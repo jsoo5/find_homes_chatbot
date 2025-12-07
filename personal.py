@@ -14,12 +14,12 @@ embedding_api_key = os.getenv('Embedding_API_KEY')
 embedding_endpoint = os.getenv('Embedding_ENDPOINT')
 embedding_api_version = os.getenv('embedding_api_version')
 embedding_deployment = os.getenv('embedding_deployment')
-ai_search_endpoint = os.getenv("pdf_vocab_gh_fixed_new_index_Search_ENDPOINT")
+ai_search_endpoint = os.getenv("AI_Search_ENDPOINT")
 ai_search_api_key = os.getenv('AI_Search_API_KEY')
 #llm_endpoint = os.getenv('OPENAI_ENDPOINT')
 #llm_api_key = os.getenv('OPENAI_API_KEY')
-llm_endpoint = os.getenv('OPENAI_ENDPOINT_2')
-llm_api_key = os.getenv('OPENAI_API_KEY_2')
+llm_endpoint = os.getenv('OPENAI_ENDPOINT')
+llm_api_key = os.getenv('OPENAI_API_KEY')
 
 # 임베딩 객체
 embedding = AzureOpenAIEmbeddings(
@@ -31,6 +31,8 @@ embedding = AzureOpenAIEmbeddings(
 
 # 벡터 검색
 def personal_request_ai_search(query: str, source_filter: str = None, k: int = 10) -> list:
+    search_url = f"{ai_search_endpoint}/indexes/add_new_index/docs/search?api-version=2025-09-01"
+ 
     headers = {
         "Content-Type": "application/json",
         "api-key": ai_search_api_key
@@ -54,7 +56,7 @@ def personal_request_ai_search(query: str, source_filter: str = None, k: int = 1
         cleaned_source = source_filter.replace(".pdf", "")
         body["filter"] = f"source eq '{cleaned_source}'"
 
-    response = requests.post(ai_search_endpoint, headers=headers, json=body)
+    response = requests.post(search_url, headers=headers, json=body)
 
     if response.status_code != 200:
         print(f"❌ 검색 실패: {response.status_code}")
@@ -164,8 +166,8 @@ Respond with the announcement names only, using the following format:
         print("❌ GPT 요청 실패:", response.status_code, response.text)
         return "⚠️ 오류가 발생했습니다."
 
-# field_value = f'19~39살 공고 추천'
-# # answer = personal_request_ai_search(field_value, source_filter=None)
-# # print(answer)
-# result = personal_generate_answer_with_rag(field_value,source_filter=None)
-# print(result)
+field_value = f'19~39살 공고 추천'
+answer = personal_request_ai_search(field_value, source_filter=None)
+print('ai_search:', answer)
+result = personal_generate_answer_with_rag(field_value,source_filter=None)
+print('rag:', result)

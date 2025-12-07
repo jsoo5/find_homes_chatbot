@@ -16,12 +16,13 @@ embedding_api_key = os.getenv('Embedding_API_KEY')
 embedding_endpoint = os.getenv('Embedding_ENDPOINT')
 embedding_api_version = os.getenv('embedding_api_version')
 embedding_deployment = os.getenv('embedding_deployment')
-ai_search_endpoint = os.getenv("pdf_vocab_gh_fixed_new_index_Search_ENDPOINT")
+
+ai_search_endpoint = os.getenv("AI_Search_ENDPOINT")
 ai_search_api_key = os.getenv('AI_Search_API_KEY')
-#llm_endpoint = os.getenv('OPENAI_ENDPOINT')
-#llm_api_key = os.getenv('OPENAI_API_KEY')
-llm_endpoint = os.getenv('OPENAI_ENDPOINT_2')
-llm_api_key = os.getenv('OPENAI_API_KEY_2')
+
+
+llm_endpoint = os.getenv('OPENAI_ENDPOINT')
+llm_api_key = os.getenv('OPENAI_API_KEY')
 
 # 임베딩 객체
 embedding = AzureOpenAIEmbeddings(
@@ -33,6 +34,8 @@ embedding = AzureOpenAIEmbeddings(
 
 # 벡터 검색
 def request_ai_search(query: str, source_filter: str = None, k: int = 5) -> list:
+    search_url = f"{ai_search_endpoint}/indexes/add_new_index/docs/search?api-version=2025-09-01"
+    
     headers = {
         "Content-Type": "application/json",
         "api-key": ai_search_api_key
@@ -56,7 +59,7 @@ def request_ai_search(query: str, source_filter: str = None, k: int = 5) -> list
         cleaned_source = source_filter.replace(".pdf", "")
         body["filter"] = f"source eq '{cleaned_source}'"
 
-    response = requests.post(ai_search_endpoint, headers=headers, json=body)
+    response = requests.post(search_url, headers=headers, json=body)
 
     if response.status_code != 200:
         print(f"❌ 검색 실패: {response.status_code}")
@@ -198,4 +201,4 @@ for chunk in chunk_result:
 print('============================')
 print('============================')
 print(f'🤖chunk_result🤖 = {result}')
-print('hi')
+print('============================')

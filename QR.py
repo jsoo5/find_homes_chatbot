@@ -6,8 +6,8 @@ import os
 load_dotenv()
 # 사용자 프롬프트
 # Azure OpenAI API의 엔드포인트 URL
-OPENAI_ENDPOINT = os.getenv('OPENAI_ENDPOINT_2')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY_2')
+OPENAI_ENDPOINT = os.getenv('OPENAI_ENDPOINT')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 #OPENAI_ENDPOINT = os.getenv('OPENAI_ENDPOINT')
 #OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
